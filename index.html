@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Coikea | 柑橘喵 | CitrusCat 的个人网站主页</title>
+    <meta name="description" content="Coikea | 柑橘喵 | CitrusCat 的个人网站主页模板">
+    <meta name="keywords" content="Coike,个人主页,程序员">
+    <link rel="icon" type="image/ico" href="https://git.moezx.cc/mirrors/sakura/raw/commit/0128ba483b992fb8761a1296f4fa5fbc9f9d54df/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css">
+    <link rel="stylesheet" href="./static/style.css?v=1.1">
+    <link rel="stylesheet" href="./static/APlayer-1.10.1/dist/APlayer.min.css">
+    <style>  /*背景图片*/
+        body{
+            /*背景图片URL 可使用随机图片API */
+            background-image: url("https://bu.dusays.com/2022/06/04/629b0a2a89425.png"); 
+        }
+        .photo-bg {
+            /* 卡片左侧图片 */
+            background-image: url("https://bu.dusays.com/2022/06/04/629b0a2750921.jpg");
+        }
+    </style>
+    <script> // 音乐播放器
+        // 音乐设置
+        let meting_music_api = "https://api.mizore.cn/meting/api.php";// meting api
+        let music_server = "netease"; // 音乐服务：网易云 netease 参见 meting api支持的服务
+        let music_type = "song"; // 歌曲类型：歌单playlist 单首歌曲 song  专辑 album
+        let music_id = "33737578"; // 歌单ID或歌曲ID或者专辑ID 20173709 29732992
+        let music_order = "random"; // 音频循环顺序, 顺序播放： 'list', 随机播放：'random'
+        let music_mini = false; // mini模式 吸底模式开启后此选项实效 true / false
+        let music_fixed = false; // 吸底模式
+        let music_volume = 0.7; // 默认音量
+        let music_autoplay = false; // 自动播放
+        let music_loop = "all"; // 音频循环播放, 可选值: 'all', 'one', 'none' ，分别为全部循环，单曲循环，不循环
+        // 一言设置
+
+    
+    </script>
+</head>
+
+<body>
+    <div id="main" class="container">
+        <div class="row my-card justify-content-center">
+            <div class="col-lg-4 photo-bg"></div>
+            <div class="col-lg-8 card">
+                <h1>CoikeaHomePage</h1>
+                <p>很荣幸您能访问我的网站！ 
+                </p>
+                <p id="hitokoto_text">:D 一言获取中... </p>
+                <p align="right" id="hitokoto_fromWho"></p> 
+                <div class="container-fluid"> <!-- 主页 -->
+                    <div class="row"> <!-- 主页按钮 id对应最后一个Javascript -->
+                        <button id="coike-blog" class="btn btn-primary col-lg-4">Bilibili</button>
+                        <button id="coike-github" class="btn btn-secondary col-lg-4">Github</button>
+                        <button id="coike-mail" class="btn btn-success col-lg-4">Send a Mail</button>
+                    </div>
+                </div>
+
+                <div id="aplayer-inner" class="aplayer"><!-- 音乐播放器 -->
+
+                </div>
+
+                <ul class="social mt-1"> <!-- 社交媒体联系方式  -->
+                    <!--<li><a href="#"><i class="fab fa-weibo " aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fab fa-github" aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fab fa-telegram" aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fab fa-zhihu" aria-hidden="true"></i></a></li> -->
+                </ul>
+                
+                <footer><!-- 页脚 -->
+                    <p>Copyright 2022 - Now <!--<a href="https://www.170601.xyz/" target="_blank">七六零一</a> <a href="http://beian.miit.gov.cn/" target="_blank">豫ICP备00000000号-1</a> -->
+                        <br>Source <a href="https://github.com/kaygb" target="_blank" rel="">kaygb</a>. Modify by <a href="./">Citruscat.</a>
+                        由<a href="https://starxn.com/aff/BLKGBSBZ" target="_blank" rel="nofollow"><img src="https://starxn.com/themes/web/starxn/assets/img/logo/logo3.png" style="width:50px;"></a>提供服务器支持。
+                    </p>
+                    </p>
+
+                </footer>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- aplayer -->
+    <div id="aplayer-fixed"  class="aplayer"></div>
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./static/APlayer-1.10.1/dist/APlayer.min.js"></script>
+    <script src="./static/Meting.min.js"></script>
+    <!-- end_aplayer -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script defer src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="./static/layer-v3.5.1/layer/layer.js"></script>
+    <!-- <script src="./static/main.js"></script> -->
+    <script src="./static/main.js"></script>
+    <script> //对应主页按钮
+        //弹出一个页面层
+        $('#coike-blog').on('click', function() {
+            window.open('https://space.bilibili.com/142594051');
+        });
+        $('#coike-mail').on('click', function() {
+            window.open('mailto:coike@citruscat.cn');
+        });
+        $('#coike-github').on('click', function() {
+            window.open('https://github.com/kaygb/KZHomePage');
+        });
+    </script>
+
+</html>
