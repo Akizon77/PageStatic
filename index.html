@@ -1,424 +1,196 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<title>Akizon的个人网站主页</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Coikea | 柑橘喵 | CitrusCat 的个人网站主页模板">
-	<meta name="keywords" content="Coike,个人主页,程序员">
-	<link rel="icon" type="image/ico" href="./img/favicon.ico">
-	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css">
-	<link rel="stylesheet" href="./static/style.css?v=1.1">
-	<link rel="stylesheet" href="./static/APlayer-1.10.1/dist/APlayer.min.css">
+  <meta charset="utf-8">
+  
 
-	<style>  /*背景图片*/
-        body{
-            /*背景图片URL 可使用随机图片API */
-            background-image: url("./img/100082201_Modified.jpg"); 
-        }
-        .photo-bg {
-            /* 卡片左侧图片 */
-            background-image: url("./img/1675515595082.jpg");
-        }
-    </style>
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-	<script> // 音乐播放器
-        // 音乐设置
-        let meting_music_api = "https://api.mizore.cn/meting/api.php";// meting api
-        let music_server = "netease"; // 音乐服务：网易云 netease 参见 meting api支持的服务
-        let music_type = "song"; // 歌曲类型：歌单playlist 单首歌曲 song  专辑 album
-        let music_id = "1308778861"; // 歌单ID或歌曲ID或者专辑ID 20173709 29732992
-        let music_order = "random"; // 音频循环顺序, 顺序播放： 'list', 随机播放：'random'
-        let music_mini = false; // mini模式 吸底模式开启后此选项实效 true / false
-        let music_fixed = false; // 吸底模式
-        let music_volume = 0.7; // 默认音量
-        let music_autoplay = false; // 自动播放
-        let music_loop = "all"; // 音频循环播放, 可选值: 'all', 'one', 'none' ，分别为全部循环，单曲循环，不循环
-	</script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
-</head>
 <body>
-  <canvas id="sakura" style="z-index: 1;position: fixed;align-content: center"></canvas>
-<style type="text/css">
-	*{margin:0;padding:0;list-style-type:none;}
-	a,img{border:0;}
-	body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
-body {
-    padding:0;
-    margin:0;
-    overflow:hidden;
-
-	  background-image:url(./img/100082201_Modified.jpg);
-	  background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-canvas {
-    padding:0;
-    margin:0;
-    opacity:0.25;
-}
-div.btnbg {
-    position:fixed;
-    left:0;
-    top:0;
-}
-
-</style>
-
-<!-- sakura shader -->
-<script id="sakura_point_vsh" type="x-shader/x_vertex">
-uniform mat4 uProjection;
-uniform mat4 uModelview;
-uniform vec3 uResolution;
-uniform vec3 uOffset;
-uniform vec3 uDOF;  //x:focus distance, y:focus radius, z:max radius
-uniform vec3 uFade; //x:start distance, y:half distance, z:near fade start
-
-attribute vec3 aPosition;
-attribute vec3 aEuler;
-attribute vec2 aMisc; //x:size, y:fade
-
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
-
-//varying mat3 rotMat;
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
-
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
-
-void main(void) {
-    // Projection is based on vertical angle
-    vec4 pos = uModelview * vec4(aPosition + uOffset, 1.0);
-    gl_Position = uProjection * pos;
-    gl_PointSize = aMisc.x * uProjection[1][1] / -pos.z * uResolution.y * 0.5;
-
-    pposition = pos.xyz;
-    psize = aMisc.x;
-    pdist = length(pos.xyz);
-    palpha = smoothstep(0.0, 1.0, (pdist - 0.1) / uFade.z);
-
-    vec3 elrsn = sin(aEuler);
-    vec3 elrcs = cos(aEuler);
-    mat3 rotx = mat3(
-        1.0, 0.0, 0.0,
-        0.0, elrcs.x, elrsn.x,
-        0.0, -elrsn.x, elrcs.x
-    );
-    mat3 roty = mat3(
-        elrcs.y, 0.0, -elrsn.y,
-        0.0, 1.0, 0.0,
-        elrsn.y, 0.0, elrcs.y
-    );
-    mat3 rotz = mat3(
-        elrcs.z, elrsn.z, 0.0, 
-        -elrsn.z, elrcs.z, 0.0,
-        0.0, 0.0, 1.0
-    );
-    mat3 rotmat = rotx * roty * rotz;
-    normal = rotmat[2];
-
-    mat3 trrotm = mat3(
-        rotmat[0][0], rotmat[1][0], rotmat[2][0],
-        rotmat[0][1], rotmat[1][1], rotmat[2][1],
-        rotmat[0][2], rotmat[1][2], rotmat[2][2]
-    );
-    normX = trrotm[0];
-    normY = trrotm[1];
-    normZ = trrotm[2];
-
-    const vec3 lit = vec3(0.6917144638660746, 0.6917144638660746, -0.20751433915982237);
-
-    float tmpdfs = dot(lit, normal);
-    if(tmpdfs < 0.0) {
-        normal = -normal;
-        tmpdfs = dot(lit, normal);
-    }
-    diffuse = 0.4 + tmpdfs;
-
-    vec3 eyev = normalize(-pos.xyz);
-    if(dot(eyev, normal) > 0.0) {
-        vec3 hv = normalize(eyev + lit);
-        specular = pow(max(dot(hv, normal), 0.0), 20.0);
-    }
-    else {
-        specular = 0.0;
-    }
-
-    rstop = clamp((abs(pdist - uDOF.x) - uDOF.y) / uDOF.z, 0.0, 1.0);
-    rstop = pow(rstop, 0.5);
-    //-0.69315 = ln(0.5)
-    distancefade = min(1.0, exp((uFade.x - pdist) * 0.69315 / uFade.y));
-}
-</script>
-<script id="sakura_point_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-
-uniform vec3 uDOF;  //x:focus distance, y:focus radius, z:max radius
-uniform vec3 uFade; //x:start distance, y:half distance, z:near fade start
-
-const vec3 fadeCol = vec3(0.08, 0.03, 0.06);
-
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
-
-//varying mat3 rotMat;
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
-
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
-
-float ellipse(vec2 p, vec2 o, vec2 r) {
-    vec2 lp = (p - o) / r;
-    return length(lp) - 1.0;
-}
-
-void main(void) {
-    vec3 p = vec3(gl_PointCoord - vec2(0.5, 0.5), 0.0) * 2.0;
-    vec3 d = vec3(0.0, 0.0, -1.0);
-    float nd = normZ.z; //dot(-normZ, d);
-    if(abs(nd) < 0.0001) discard;
-
-    float np = dot(normZ, p);
-    vec3 tp = p + d * np / nd;
-    vec2 coord = vec2(dot(normX, tp), dot(normY, tp));
-
-    //angle = 15 degree
-    const float flwrsn = 0.28819045102521;
-    const float flwrcs = 0.965925826289068;
-    mat2 flwrm = mat2(flwrcs, -flwrsn, flwrsn, flwrcs);
-    vec2 flwrp = vec2(abs(coord.x), coord.y) * flwrm;
-
-    float r;
-    if(flwrp.x < 0.0) {
-        r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.36, 0.96) * 0.5);
-    }
-    else {
-        r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.58, 0.96) * 0.5);
-    }
-
-    if(r > rstop) discard;
-	//花瓣颜色
-    vec3 col = mix(vec3(1.0, 0.9, 0.75), vec3(1.0, 0.9, 0.87), r);
-    float grady = mix(0.0, 1.0, pow(coord.y * 0.5 + 0.5, 0.35));
-    col *= vec3(3.0, grady, grady);
-    col *= mix(0.9, 1.0, pow(abs(coord.x), 1.0));
-    col = col * diffuse + specular;
-
-    col = mix(fadeCol, col, distancefade);
-
-    float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
-    alpha = smoothstep(0.0, 1.0, alpha) * palpha;
-
-    gl_FragColor = vec4(col * 3.0, alpha);
-}
-</script>
-<!-- effects -->
-<script id="fx_common_vsh" type="x-shader/x_vertex">
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-</script>
-<script id="bg_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-
-uniform vec2 uTimes;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec3 col;
-    float c;
-    vec2 tmpv = texCoord * vec2(0.8, 1.0) - vec2(0.95, 1.0);
-    c = exp(-pow(length(tmpv) * 1.2, 2.0));
-    col = mix(vec3(0.05, 0.0, 0.03), vec3(0.96,0.91, 1.0) * 1.5, c);
-    gl_FragColor = vec4(col * 0.5, 1.0);
-}
-</script>
-<script id="fx_brightbuf_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    gl_FragColor = vec4(col.rgb * 2.0 - vec3(0.5), 1.0);
-}
-</script>
-<script id="fx_dirblur_r4_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-uniform vec4 uBlurDir; //dir(x, y), stride(z, w)
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    col = col + texture2D(uSrc, texCoord + uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord - uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord + (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    col = col + texture2D(uSrc, texCoord - (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    gl_FragColor = col / 7.5;
-}
-</script>
-<!-- effect fragment shader template -->
-<script id="fx_common_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    gl_FragColor = texture2D(uSrc, texCoord);
-}
-</script>
-<!-- post processing -->
-<script id="pp_final_vsh" type="x-shader/x_vertex">
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-</script>
-<script id="pp_final_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform sampler2D uBloom;
-uniform vec2 uDelta;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    vec4 srccol = texture2D(uSrc, texCoord) * 2.0;
-    vec4 bloomcol = texture2D(uBloom, texCoord);
-    vec4 col;
-    col = srccol + bloomcol * (vec4(1.0) + srccol);
-    col *= smoothstep(1.0, 0.0, pow(length((texCoord - vec2(0.5)) * 2.0), 1.2) * 0.5);
-    col = pow(col, vec4(0.45454545454545)); //(1.0 / 2.2)
-
-    gl_FragColor = vec4(col.rgb, 1.0);
-    gl_FragColor.a = 1.0;
-}
-</script>
-  <script src="js/index.js"></script>
-<div style="text-align:center;">
-</div>
-	<!--源码 -->
-    <div id="main" class="container" style="z-index: 3">
-        <div class="row my-card justify-content-center">
-            <div class="col-lg-4 photo-bg"></div>
-            <div class="col-lg-8 card">
-                <h1>Akz.moe</h1>
-                <p>很荣幸您能访问我的网站！ 
-                </p>
-                <p id="hitokoto_text">:D 一言获取中... </p>
-                <p align="right" id="hitokoto_fromWho"></p> 
-                <div class="container-fluid"> <!-- 主页 -->
-                    <div class="row"> <!-- 主页按钮 id对应最后一个Javascript -->
-                        <button id="coike-blog" class="btn btn-primary col-lg-4">Bilibili</button>
-                        <button id="coike-github" class="btn btn-secondary col-lg-4">Github</button>
-                        <button id="coike-mail" class="btn btn-success col-lg-4">Send a Mail</button>
-                    </div>
-                </div>
-
-                <div id="aplayer-inner" class="aplayer"><!-- 音乐播放器 -->
-
-                </div>
-
-                <ul class="social mt-1"> <!-- 社交媒体联系方式  -->
-                    <!--<li><a href="#"><i class="fab fa-weibo " aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fab fa-github" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fab fa-telegram" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fab fa-zhihu" aria-hidden="true"></i></a></li> -->
-                </ul>
-                
-                <footer><!-- 页脚 -->
-                    <p>Copyright 2022 - Now <!--<a href="https://www.170601.xyz/" target="_blank">七六零一</a> <a href="http://beian.miit.gov.cn/" target="_blank">豫ICP备00000000号-1</a> -->
-                        <br>Source <a href="https://github.com/kaygb/KZHomePage" target="_blank" rel="">kaygb</a>. Modify by <a href="./">Akizon.</a>
-                    </p>
-                </footer>
-            </div>
-        </div>
-
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
     </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/02/06/hello-world/" class="article-date">
+  <time datetime="2023-02-06T05:03:40.494Z" itemprop="datePublished">2023-02-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/02/06/hello-world/">Hello World</a>
+    </h1>
+  
 
-    <!-- aplayer -->
-    <div id="aplayer-fixed"  class="aplayer"></div>
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="./static/APlayer-1.10.1/dist/APlayer.min.js"></script>
-    <script src="./static/Meting.min.js"></script>
-    <!-- end_aplayer -->
-    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
-    <script defer src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="./static/layer-v3.5.1/layer/layer.js"></script>
-    <!-- <script src="./static/main.js"></script> -->
-    <script src="./static/main.js"></script>
-    <script> //对应主页按钮
-        //弹出一个页面层
-        $('#coike-blog').on('click', function() {
-            window.open('https://space.bilibili.com/142594051');
-        });
-        $('#coike-mail').on('click', function() {
-            window.open('mailto:Akizon@akizon.moe');
-        });
-        $('#coike-github').on('click', function() {
-            window.open('https://github.com/Hytf233/PageStatic');
-        });
-    </script>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/06/hello-world/" data-id="cldscngny0000ksild3yr56xp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">February 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/06/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
 </body>
 </html>
